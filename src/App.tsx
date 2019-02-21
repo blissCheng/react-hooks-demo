@@ -1,28 +1,40 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { createContext, useState } from 'react';
+import { Switch, BrowserRouter, Route } from 'react-router-dom';
+import menuData from './config/menus';
+// 全局状态类型声明
+export interface AppContextProps {
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.tsx</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
-  }
+}
+export const AppContext = createContext({} as ContextAttr<AppContextProps>);
+
+const App = () => {
+  // 全局状态
+  const [ state, setState ] = useState({
+    num: 1
+  } as AppContextProps);
+  return (
+    <AppContext.Provider
+      value={{
+        state,
+        setState
+      }}
+    >
+      <BrowserRouter>
+        <Switch>
+          {
+            menuData.map((item: MenuData) => (
+              <Route
+                exact
+                key={item.name}
+                path={item.path}
+                component={item.component}
+              />
+            ))
+          }
+        </Switch>
+      </BrowserRouter>
+    </AppContext.Provider>
+  );
 }
 
 export default App;
